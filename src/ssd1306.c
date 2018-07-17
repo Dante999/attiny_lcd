@@ -213,16 +213,16 @@ void ssd1306_data_block(uint8_t *data, uint8_t size) {
 /******************************************************************************
  * @brief   draws the given tile to the display
  *
- * @param   page    the page where the tile should be placed (0 to 7)
- *                  where 0 is on the bottom and 7 on the top
- *
  * @param   column  the column where the tile should be placed (0 to 127)
+ *
+ * @param   page    the page where the tile should be placed (0 to 7)
+ *                  where 0 is on the top and 7 on the bottom
  *
  * @param   tile    the tile which should be displayed (8x8 bits - uint8_t[8])
  *
  * @return  none
 ******************************************************************************/
-void ssd1306_draw_tile(uint8_t page, uint8_t column, uint8_t *tile) {
+void ssd1306_draw_tile_colpage(uint8_t column, uint8_t page, uint8_t *tile) {
 
     ssd1306_command(SSD1306_COLUMNADDR);
     ssd1306_command(column);
@@ -233,6 +233,43 @@ void ssd1306_draw_tile(uint8_t page, uint8_t column, uint8_t *tile) {
     ssd1306_command(page);
 
     ssd1306_data_block(tile, 8);
+}
+
+
+/******************************************************************************
+ * @brief   draws the given tile to the display
+ *
+ * @param   x       the x-coordinate (0 -> left)
+ *
+ * @param   y       the y-coordinate (0 -> top)
+ *
+ * @param   tile    the tile which should be displayed (8x8 bits - uint8_t[8]
+ *
+******************************************************************************/
+void ssd1306_draw_tile_xy(uint8_t x, uint8_t y, uint8_t *tile) {
+
+    uint8_t start_page  = y/8;                  // find out on which page the tile starts
+    uint8_t offset      = y%8;                  // find out the offset
+    uint8_t end_page    = (y+7)/8;              // find out on which page the tile ends
+
+    // if this is true, the tile fits on one page
+    if( offset == 0) {
+        ssd1306_draw_tile_colpage(x, start_page, tile);
+    }
+    // crap, we have to split the tile on two pages
+    else {
+        uint8_t start_tile[8];
+        uint8_t end_tile[8];
+
+        for(uint8_t i=0; i<8; i++) {
+            start_tile[i] = tile[i] << offset;
+            end_tile[i]   = tile[i] >> (8-offset);
+        }
+
+        ssd1306_draw_tile_colpage(x, start_page, start_tile);
+        ssd1306_draw_tile_colpage(x, end_page,   end_tile); 
+    }
+
 }
 
 

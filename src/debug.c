@@ -8,8 +8,6 @@
 #define DEBUG_BIT       PB1
 
 
-
-
 /*******************************************************************************
  * @brief   initialize the debug I/O pin
  *
@@ -29,9 +27,12 @@ void debug_init() {
 /*******************************************************************************
  * @brief   controls the debug pin
  *
- * @param   mode    LOW     sets the pin to a low-level
- *                  HIGH    sets the pin to a high-level
- *                  TOGGLE  toggles the pin
+ * use the 'defines' from the header file for passing the parameter 'mode'
+ * to this function. 
+ *
+ * @param   mode    DEBUG_LOW     sets the pin to a low-level
+ *                  DEBUG_HIGH    sets the pin to a high-level
+ *                  DEBUG_TOGGLE  toggles the pin
  *
  * @return  none
  *
