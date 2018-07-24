@@ -1,8 +1,27 @@
+/*******************************************************************************
+ * @file debug.c
+ *
+ * author               : dante999
+ *
+ * brief                : a little one-pin-debug library
+ *
+ * description          : pretty simple module, with this one you can choose a 
+ *                        pin for debugging purposes. The module supports 
+ *                        setting the pin HIGH, LOW or TOGGLE it. 
+ *
+ * supported devices    : all avr controllers
+ *
+ * usage                : at first change the defines to the pin you want to use
+ *                        for debugging. Then call the 'debug_init()' function 
+ *                        and after that you can use the 'debug_set_pin()'
+ * 
+ ******************************************************************************/
+
 #include "debug.h"
 
 /*******************************************************************************
  * define which pin should be used for debugging
-*******************************************************************************/
+ ******************************************************************************/
 #define DEBUG_DDR       DDRB
 #define DEBUG_PORT      PORTB
 #define DEBUG_BIT       PB1
@@ -17,7 +36,7 @@
  *
  * @return  none
  *
-*******************************************************************************/
+ ******************************************************************************/
 void debug_init() {
     DEBUG_DDR  |=  (1<<DEBUG_BIT);
     DEBUG_PORT &= ~(1<<DEBUG_BIT);
@@ -36,7 +55,7 @@ void debug_init() {
  *
  * @return  none
  *
-*******************************************************************************/
+ ******************************************************************************/
 void debug_set_pin(uint8_t mode) {
 
     switch(mode) {
@@ -46,7 +65,7 @@ void debug_set_pin(uint8_t mode) {
             break;
 
         case DEBUG_HIGH:
-            DEBUG_PORT |= (1<<DEBUG_BIT);
+            DEBUG_PORT |=  (1<<DEBUG_BIT);
             break;
 
         case DEBUG_TOGGLE:
